@@ -1,2 +1,30 @@
 # multirotor_launch
 ROS launch files used in multirotor UAV control.
+
+## Running a SITL simulation
+
+### Brief description
+More details on software-in-the-loop (SITL) simulation is given in https://dev.px4.io/en/simulation/ros_interface.html. In short, we simulate a multirotor-UAV in Gazebo simulator (default vehicle is quadrotor - 3DR Solo) and a PX4 flight stack. MAVROS is used to exchange data with PX4 stack. In our setup we use Spectrum RC controller to give commands to vehicle. Receiver is connected to a Pixhawk flight control unit, which in turn has a USB connection with PC. Another MAVROS node is used to get raw rc channel values. Basically, Pixhawk FCU is only used to get these values and could be replaced with a much simpler board.\
+
+### Dependencies
+To run SITL, the following packages are required (their dependencies and instructions for installing are given within each package):
+  * [mavros](http://wiki.ros.org/mavros)
+  * [mav_control_rw](https://github.com/westpoint-robotics/mav_control_rw) (linear MPC is used for control)
+  * [multirotor_transformations](https://github.com/westpoint-robotics/multirotor_transformations)
+In addition, you will also need PX4 stack source code:
+  * [px4_firmware](https://github.com/PX4/Firmware)
+
+### Running
+In first terminal, run Gazebo simulation by executing [script](https://github.com/westpoint-robotics/multirotor_launch/blob/master/scripts/gazebo_px4_sitl_launch.sh). Edit the first line in the script to indicate the path to your local PX4 source code and run:
+```
+   $ ./gazebo_px4_sitl_launch.sh 
+```
+In second terminal, run a lunch which starts all other packages required for controlling the multirotor UAV:
+```
+  $ roslaunch multirotor_launch sitl_px4_mpc.launch
+```
+To arm the vehicle, call service:
+  * /sitl/mavros/cmd/arming (True)
+
+To put PX4 in offboard control, call service:
+  * /sitl/mavros/set_mode (OFFBOARD)
