@@ -4,7 +4,9 @@ ROS launch files used in multirotor UAV control.
 ## Running a SITL simulation
 
 ### Brief description
-More details on software-in-the-loop (SITL) simulation is given in https://dev.px4.io/en/simulation/ros_interface.html. In short, we simulate a multirotor-UAV in Gazebo simulator (default vehicle is quadrotor - 3DR Solo) and a PX4 flight stack. MAVROS is used to exchange data with PX4 stack. In our setup we use Spectrum RC controller to give commands to vehicle. Receiver is connected to a Pixhawk flight control unit, which in turn has a USB connection with PC. Another MAVROS node is used to get raw rc channel values. Basically, Pixhawk FCU is only used to get these values and could be replaced with a much simpler board.\
+Details on software-in-the-loop (SITL) simulation are given in https://dev.px4.io/en/simulation/ros_interface.html. 
+
+In short, we simulate a multirotor-UAV in Gazebo (default vehicle is quadrotor - 3DR Solo) with PX4 flight stack. MAVROS is used to exchange data with simulated PX4 stack. In our setup we use Spectrum RC controller to give commands to the vehicle. RC receiver is connected to a real Pixhawk flight control unit, which in turn has a USB connection with PC. Another MAVROS node is used to get raw RC channel values. Basically, Pixhawk FCU is used only to get RC values and could be replaced with a much simpler board.
 
 ### Dependencies
 To run SITL, the following packages are required (their dependencies and instructions for installing are given within each package):
