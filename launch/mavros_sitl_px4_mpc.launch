@@ -1,0 +1,24 @@
+<launch>
+
+  <arg name="sitl_namespace" default="sitl" />
+  <arg name="px4_namespace" default="px4" />
+
+  <include file="$(find multirotor_launch)/launch/px4.launch">
+      <arg name="namespace" value="$(arg px4_namespace)" />
+      <arg name="fcu_url" value="/dev/ttyACM0:57600"/>
+  </include>
+
+  <include file="$(find mav_linear_mpc)/launch/px4_sitl_linear_mpc.launch">
+      <arg name="namespace" value="$(arg sitl_namespace)" />
+  </include>
+
+  <include file="$(find multirotor_transformations)/launch/rc_to_joy.launch">
+      <arg name="input_namespace" value="$(arg px4_namespace)" />
+      <arg name="output_namespace" value="$(arg sitl_namespace)" />
+  </include>
+
+  <include file="$(find multirotor_transformations)/launch/mpc_to_px4_command.launch">
+      <arg name="namespace" value="$(arg sitl_namespace)" />
+  </include>
+
+</launch>

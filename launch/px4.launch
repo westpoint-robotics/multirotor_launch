@@ -1,0 +1,24 @@
+<launch>
+	<!-- vim: set ft=xml noet : -->
+	<!-- example launch script for PX4 based FCU's -->
+
+	<arg name="fcu_url" default="/dev/ttyACM0:57600" />
+	<arg name="gcs_url" default="" />
+	<arg name="tgt_system" default="1" />
+	<arg name="tgt_component" default="1" />
+	<arg name="log_output" default="screen" />
+	<arg name="namespace" default="px4" />
+
+
+	<node pkg="mavros" type="mavros_node" name="mavros" required="true" clear_params="true" ns="$(arg namespace)" output="$(arg log_output)">
+        <param name="fcu_url" value="$(arg fcu_url)" />
+        <param name="gcs_url" value="$(arg gcs_url)" />
+        <param name="target_system_id" value="$(arg tgt_system)" />
+        <param name="target_component_id" value="$(arg tgt_component)" />
+
+        <!-- load blacklist, config -->
+        <rosparam command="load" file="$(find msf_updates)/px4_pluginlists.yaml" />
+        <rosparam command="load" file="$(find msf_updates)/px4_config.yaml" />
+    </node>
+
+</launch>
