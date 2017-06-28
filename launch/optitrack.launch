@@ -7,7 +7,7 @@
       server: $(arg server)
       port: 3883
 
-      update_frequency: 20.0
+      update_frequency: 100.0
       frame_id: world
 
       # Use the VRPN server's time, or the client's ROS time.
