@@ -1,6 +1,12 @@
 # multirotor_launch
 ROS launch files used in multirotor UAV control.
 
+## Installation
+To receive optitrack data, we used vrpn client in this package. Install vrpn client with:
+```
+$ sudo apt-get install ros-kinetic-vrpn ros-kinetic-vrpn-client-ros
+```
+
 ## Running a SITL simulation
 
 ### Brief description
