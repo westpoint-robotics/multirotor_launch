@@ -6,6 +6,10 @@ To receive optitrack data, we used vrpn client in this package. Install vrpn cli
 ```
 $ sudo apt-get install ros-kinetic-vrpn ros-kinetic-vrpn-client-ros
 ```
+We use [multimaster_fkie](http://wiki.ros.org/multimaster_fkie) package, install it with:
+```
+sudo apt-get install ros-kinetic-multimaster-fkie
+```
 
 ## Running a SITL simulation
 
