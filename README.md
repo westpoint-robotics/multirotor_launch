@@ -14,6 +14,11 @@ To use a PointGrey camera, simply install their official driver:
 ```
 sudo apt-get install ros-kinetic-pointgrey-camera-driver
 ```
+To be able to run the camera driver without super user privileges , execute flycap2-conf from the [scripts](scripts) folder and follow the script instructions. Script creates pgrimaging group, adds a user to the group and creates udev rules.
+```
+sudo -s
+./flycap2-conf
+```
 If running a ROS barebone version, install image transport pluggins:
 ```
 sudo apt-get install ros-kinetic-image-transport-plugins
