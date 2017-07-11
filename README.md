@@ -10,6 +10,14 @@ We use [multimaster_fkie](http://wiki.ros.org/multimaster_fkie) package, install
 ```
 sudo apt-get install ros-kinetic-multimaster-fkie
 ```
+To use a PointGrey camera, simply install their official driver:
+```
+sudo apt-get install ros-kinetic-pointgrey-camera-driver
+```
+If running a ROS barebone version, install image transport pluggins:
+```
+sudo apt-get install ros-kinetic-image-transport-plugins
+```
 
 ## Running a SITL simulation
 
