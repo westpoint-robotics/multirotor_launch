@@ -13,22 +13,45 @@ Once you cloned the valid git repository, checkout the branch mpc_offboard_contr
 ```
 make nuttx_px4fmu-v2_default upload
 ```
-The file containing PX4 paramameters used on F550 frame (hexrotor) is given [here](https://github.com/westpoint-robotics/Firmware/blob/mpc_offboard_control/parameters/f550_mpc_offboard_control.params). If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
+The file containing PX4 parameters used on F550 frame (hexrotor) is given [here](https://github.com/westpoint-robotics/Firmware/blob/mpc_offboard_control/parameters/f550_mpc_offboard_control.params). If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
 
 ### ROS setup
 
-#### Core packages for control and estimation
+#### Core packages for control, estimation and communication
+For estimation of the UAV states, namely pose (position and orientation) and velocity (linear and angular), we use the following package (branch master)
+  * [ethzasl_msf](https://github.com/westpoint-robotics/ethzasl_msf) (branch master)
+ 
+Just follow the instructions for installation on the above link. There is also a link to tutorial which describes in detail what's behind this package.
 
-#### Dependecies
+For UAV position and yaw control, the following package is used (branch master)
+  * [mav_contol_rw](https://github.com/westpoint-robotics/mav_control_rw) (branch master)
 
-To receive optitrack data, we used vrpn client in this package. Install vrpn client with:
+Again, just follow the instructions for installation on the given link. This package contains a model predictive control (MPC) algorithm for UAV position control and PI controller for yaw control. More details on MPC algorithm are given in the papers listed in the package github page (above link).
+
+To connect above ROS packages with Pixhawk, the following packages are required:
+  * [mavros](https://github.com/westpoint-robotics/mavros) (branch offboard_yaw_control)
+  * [multirotor_transformations](https://github.com/westpoint-robotics/multirotor_transformations) (branch master)
+
+We modified mavros to allow for offboard yaw control. This means that instead of yaw reference, we send yaw rate reference to Pixhawk. The link to PX4 stack supporting this modification is given in [Pixhawk section](#pixhawk-setup).
+
+In short, multirotor transformation package contains various ROS nodes which provide interfaces between controller node and mavros, and estimation node and optitrack node, etc.
+
+If your are using Optitrack stream as UAV pose feedback source, in this setup we used vrpn client package. Install vrpn client with:
 ```
 $ sudo apt-get install ros-kinetic-vrpn ros-kinetic-vrpn-client-ros
 ```
-We use [multimaster_fkie](http://wiki.ros.org/multimaster_fkie) package, install it with:
-```
-sudo apt-get install ros-kinetic-multimaster-fkie
-```
+
+If you are using multi marker tracking algorithm as UAV pose feedback source, install the following package:
+
+[ar_marker_client](https://github.com/westpoint-robotics/ar_marker_client) (branch master)
+
+The installation instructions are given in the given link.
+
+Finally, a set of launch files for running everything is given in package:
+
+[multirotor_launch](https://github.com/westpoint-robotics/multirotor_launch) (branch master)
+
+#### Dependecies
 To use a PointGrey camera, simply install their official driver:
 ```
 sudo apt-get install ros-kinetic-pointgrey-camera-driver
@@ -53,14 +76,6 @@ sudo apt-get install ros-kinetic-urdf ros-kinetic-control-toolbox
 Details on software-in-the-loop (SITL) simulation are given in https://dev.px4.io/en/simulation/ros_interface.html. 
 
 In short, we simulate a multirotor-UAV in Gazebo (default vehicle is quadrotor - 3DR Solo) with PX4 flight stack. MAVROS is used to exchange data with simulated PX4 stack. In our setup we use Spectrum RC controller to give commands to the vehicle. RC receiver is connected to a real Pixhawk flight control unit, which in turn has a USB connection with PC. Another MAVROS node is used to get raw RC channel values. Basically, Pixhawk FCU is used only to get RC values and could be replaced with a much simpler board.
-
-### Dependencies
-To run SITL, the following packages are required (their dependencies and instructions for installing are given within each package):
-  * [mavros](http://wiki.ros.org/mavros)
-  * [mav_control_rw](https://github.com/westpoint-robotics/mav_control_rw) (linear MPC is used for control)
-  * [multirotor_transformations](https://github.com/westpoint-robotics/multirotor_transformations)
-In addition, you will also need PX4 stack source code:
-  * [px4_firmware](https://github.com/PX4/Firmware)
 
 ### Running
 In first terminal, run Gazebo simulation by executing [script](https://github.com/westpoint-robotics/multirotor_launch/blob/master/scripts/gazebo_px4_sitl_launch.sh). Edit the first line in the script to indicate the path to your local PX4 source code and run:
