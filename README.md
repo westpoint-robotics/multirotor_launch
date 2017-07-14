@@ -6,8 +6,8 @@ The instructions given here are valid for a multirotor UAV running custom PX4 st
 ## Installation & Dependencies
 
 ### Pixhawk setup
-It is important to flash a proper PX4 stack on Pixhawk flight control unit (fcu). The proper firmware version is available online (branch mpc_offboard_control):
-  * [PX4 firmware](https://github.com/westpoint-robotics/Firmware/tree/mpc_offboard_control)
+It is important to flash a proper PX4 stack on Pixhawk flight control unit (fcu). The proper firmware version is available online:
+  * [PX4 firmware](https://github.com/westpoint-robotics/Firmware/tree/mpc_offboard_control) (branch mpc_offboard_control)
 
 Once you cloned the valid git repository, checkout the branch mpc_offboard_control, build and upload the firmware. To set up your environment for cross-compile, follow these [instructions](https://dev.px4.io/en/setup/dev_env_linux.html).
 
@@ -17,18 +17,20 @@ make nuttx_px4fmu-v2_default upload
 ```
 The file containing PX4 parameters used on F550 frame (hexrotor) is given [here](https://github.com/westpoint-robotics/Firmware/blob/mpc_offboard_control/parameters/f550_mpc_offboard_control.params). If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
 
+TODO: add a link to prebuilt firmware binary file.
+
 ### ROS setup
 
 #### Core packages for control, estimation and communication
-For estimation of the UAV states, namely pose (position and orientation) and velocity (linear and angular), we use the following package (branch master)
+For estimation of the UAV states, namely pose (position and orientation) and velocity (linear and angular), we use the following package 
   * [ethzasl_msf](https://github.com/westpoint-robotics/ethzasl_msf) (branch master)
  
 Just follow the instructions for installation on the above link. There is also a link to tutorial which describes in detail what's behind this package.
 
-For UAV position and yaw control, the following package is used (branch master)
+For UAV position and yaw control, the following package is used
   * [mav_contol_rw](https://github.com/westpoint-robotics/mav_control_rw) (branch master)
 
-Again, just follow the instructions for installation on the given link. This package contains a model predictive control (MPC) algorithm for UAV position control and PI controller for yaw control. More details on MPC algorithm are given in the papers listed in the package github page (above link).
+Again, just follow the instructions for installation on the given link. This package contains a model predictive control (MPC) algorithm for UAV position control and PI controller for yaw control. More details on MPC algorithm are given in the papers listed in the package github page.
 
 To connect above ROS packages with Pixhawk, the following packages are required:
   * [mavros](https://github.com/westpoint-robotics/mavros) (branch offboard_yaw_control)
@@ -94,3 +96,12 @@ To arm the vehicle, call service:
 
 To put PX4 in offboard control, call service:
   * /sitl/mavros/set_mode (OFFBOARD)
+
+## Running everything for flying
+To run all packages required for flying in optitrack use the following launch file:
+```  $ roslaunch multirotor_launch px4_msf_mpc_mavros_optitrack.launch 
+```
+
+To run all packages required for flying with multi-marker tracking algorihm, use the following launch file:
+```  $ roslaunch multirotor_launch px4_msf_mpc_mavros_multimarker.launch
+```
