@@ -13,7 +13,7 @@ Once you cloned the valid git repository, checkout the branch mpc_offboard_contr
 ```
 make nuttx_px4fmu-v2_default upload
 ```
-The file containing PX4 paramameters used on F550 frame (hexrotor) is given here. If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
+The file containing PX4 paramameters used on F550 frame (hexrotor) is given [here](https://github.com/westpoint-robotics/Firmware/blob/mpc_offboard_control/parameters/f550_mpc_offboard_control.params). If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
 
 ### ROS setup
 
