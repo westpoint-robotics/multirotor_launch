@@ -23,6 +23,10 @@ If running a ROS barebone version, install image transport pluggins:
 ```
 sudo apt-get install ros-kinetic-image-transport-plugins
 ```
+To compile mavros extras install:
+```
+sudo apt-get install ros-kinetic-urdf ros-kinetic-control-toolbox
+```
 
 ## Running a SITL simulation
 
