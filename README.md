@@ -36,7 +36,7 @@ To connect above ROS packages with Pixhawk, the following packages are required:
   * [mavros](https://github.com/westpoint-robotics/mavros) (branch offboard_yaw_control)
   * [multirotor_transformations](https://github.com/westpoint-robotics/multirotor_transformations) (branch master)
 
-We modified mavros to allow for offboard yaw control. This means that instead of yaw reference, we send yaw rate reference to Pixhawk. The link to PX4 stack supporting this modification is given in [Pixhawk section](#pixhawk-setup).
+For mavros dependencies, follow instructions on [mavros](https://github.com/westpoint-robotics/mavros) git page, but make sure you switch to *offboard_yaw_control* branch (there are no such instructions on master branch). We modified mavros to allow for offboard yaw control. This means that instead of yaw reference, we send yaw rate reference to Pixhawk. The link to PX4 stack supporting this modification is given in [Pixhawk section](#pixhawk-setup).
 
 In short, multirotor transformation package contains various ROS nodes which provide interfaces between controller node and mavros, and estimation node and optitrack node, etc.
 
