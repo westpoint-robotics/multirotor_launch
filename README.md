@@ -102,7 +102,7 @@ There is only one thing left before flying, initialize a multi-sensor fusion (ms
 ```
 rosrun rqt_reconfigure rqt_reconfigure
 ```
-Under <namespace/msf_core/pose_sensor click the initialize filter option, where <namespace> is the namespace of the msf node.
+Under <namespace/msf_optitrack_pose_sensor/pose_sensor click the *core_init_filter* option, where <namespace> is the namespace of your msf node.
 
 To run all packages required for flying with multi-marker tracking algorihm, use the following launch file:
 ```
