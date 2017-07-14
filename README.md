@@ -9,7 +9,9 @@ The instructions given here are valid for a multirotor UAV running custom PX4 st
 It is important to flash a proper PX4 stack on Pixhawk flight control unit (fcu). The proper firmware version is available online (branch mpc_offboard_control):
   * [PX4 firmware](https://github.com/westpoint-robotics/Firmware/tree/mpc_offboard_control)
 
-Once you cloned the valid git repository, checkout the branch mpc_offboard_control, build and upload the firmware with the following command:
+Once you cloned the valid git repository, checkout the branch mpc_offboard_control, build and upload the firmware. To set up your environment for cross-compile, follow these [instructions](https://dev.px4.io/en/setup/dev_env_linux.html).
+
+Now built and upload the firmare with the following command:
 ```
 make nuttx_px4fmu-v2_default upload
 ```
