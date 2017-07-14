@@ -36,20 +36,21 @@ We modified mavros to allow for offboard yaw control. This means that instead of
 
 In short, multirotor transformation package contains various ROS nodes which provide interfaces between controller node and mavros, and estimation node and optitrack node, etc.
 
-If your are using Optitrack stream as UAV pose feedback source, in this setup we used vrpn client package. Install vrpn client with:
+If your are using Optitrack stream as UAV pose feedback source, in this setup we use vrpn client package. Install vrpn client with:
 ```
 $ sudo apt-get install ros-kinetic-vrpn ros-kinetic-vrpn-client-ros
 ```
+The pose of the vehicle is given in topic /vrpn_client_node/<tracker_name>/pose, where <tracker_name> is the name of the tracker assigned in Motive software.
 
 If you are using multi marker tracking algorithm as UAV pose feedback source, install the following package:
 
-[ar_marker_client](https://github.com/westpoint-robotics/ar_marker_client) (branch master)
+  * [ar_marker_client](https://github.com/westpoint-robotics/ar_marker_client) (branch master)
 
 The installation instructions are given in the given link.
 
 Finally, a set of launch files for running everything is given in package:
 
-[multirotor_launch](https://github.com/westpoint-robotics/multirotor_launch) (branch master)
+  * [multirotor_launch](https://github.com/westpoint-robotics/multirotor_launch) (branch master)
 
 #### Dependecies
 To use a PointGrey camera, simply install their official driver:
