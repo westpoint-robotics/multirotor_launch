@@ -1,7 +1,26 @@
 # multirotor_launch
 ROS launch files used in multirotor UAV control.
 
-## Installation
+The instructions given here are valid for a multirotor UAV running custom PX4 stack on a Pixhawk board and running ROS packages on a PC (either onboard, like Gigabyte Brix or Intel Nuc, or ground PC station).
+
+## Installation & Dependencies
+
+### Pixhawk setup
+It is important to flash a proper PX4 stack on Pixhawk flight control unit (fcu). The proper firmware version is available online (branch mpc_offboard_control):
+  * [PX4 firmware](https://github.com/westpoint-robotics/Firmware/tree/mpc_offboard_control)
+
+Once you cloned the valid git repository, checkout the branch mpc_offboard_control, build and upload the firmware with the following command:
+```
+make nuttx_px4fmu-v2_default upload
+```
+The file containing PX4 paramameters used on F550 frame (hexrotor) is given here. If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
+
+### ROS setup
+
+#### Core packages for control and estimation
+
+#### Dependecies
+
 To receive optitrack data, we used vrpn client in this package. Install vrpn client with:
 ```
 $ sudo apt-get install ros-kinetic-vrpn ros-kinetic-vrpn-client-ros
