@@ -1,8 +1,8 @@
 <launch>
 
   <arg name="namespace" default="f550" />
-  <arg name="thrust_max" default="31" />
-  <arg name="px4_dev" value="/dev/ttyACM0:57600"/>
+  <arg name="thrust_max" default="34" />
+  <arg name="px4_dev" value="/dev/ttyUSB0:921600"/>
 
   <include file="$(find multirotor_launch)/launch/optitrack.launch"/>
 
