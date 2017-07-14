@@ -46,7 +46,7 @@ If you are using multi marker tracking algorithm as UAV pose feedback source, in
 
   * [ar_marker_client](https://github.com/westpoint-robotics/ar_marker_client) (branch master)
 
-The installation instructions are given in the given link.
+The installation instructions are given in the above link.
 
 Finally, a set of launch files for running everything is given in package:
 
