@@ -98,8 +98,14 @@ To run all packages required for flying in optitrack use the following launch fi
 ```  
   $ roslaunch multirotor_launch px4_msf_mpc_mavros_optitrack.launch 
 ```
+There is only one thing left before flying, initialize a multi-sensor fusion (msf) filter by using rqt_reconfigure
+```
+rosrun rqt_reconfigure rqt_reconfigure
+```
+Under <namespace/msf_core/pose_sensor click the initialize filter option, where <namespace> is the namespace of the msf node.
 
 To run all packages required for flying with multi-marker tracking algorihm, use the following launch file:
 ```
   $ roslaunch multirotor_launch px4_msf_mpc_mavros_multimarker.launch
 ```
+Again, before flying initialize the multi-sensor fusion filter.
