@@ -99,9 +99,11 @@ To put PX4 in offboard control, call service:
 
 ## Running everything for flying
 To run all packages required for flying in optitrack use the following launch file:
-```  $ roslaunch multirotor_launch px4_msf_mpc_mavros_optitrack.launch 
+```  
+  $ roslaunch multirotor_launch px4_msf_mpc_mavros_optitrack.launch 
 ```
 
 To run all packages required for flying with multi-marker tracking algorihm, use the following launch file:
-```  $ roslaunch multirotor_launch px4_msf_mpc_mavros_multimarker.launch
+```
+  $ roslaunch multirotor_launch px4_msf_mpc_mavros_multimarker.launch
 ```
