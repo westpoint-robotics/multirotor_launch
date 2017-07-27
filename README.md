@@ -6,7 +6,9 @@ The instructions given here are valid for a multirotor UAV running custom PX4 st
 ## Installation & Dependencies
 
 ### Pixhawk setup
-It is important to flash a proper PX4 stack on Pixhawk flight control unit (fcu). The proper firmware version is available online:
+
+#### Compiling source code
+It is important to flash a proper PX4 stack on Pixhawk flight control unit (fcu). The proper source of the firmware version is available online:
   * [PX4 firmware](https://github.com/westpoint-robotics/Firmware/tree/mpc_offboard_control) (branch mpc_offboard_control)
 
 Once you cloned the valid git repository, checkout the branch mpc_offboard_control, build and upload the firmware. To set up your environment for cross-compile, follow these [instructions](https://dev.px4.io/en/setup/dev_env_linux.html).
@@ -15,9 +17,17 @@ Now built and upload the firmare with the following command:
 ```
 make nuttx_px4fmu-v2_default upload
 ```
+#### Uploading prebuilt firmware binary
+An alternative to compiling source code is to download the prebuilt firmware version available [here](https://www.dropbox.com/s/9whpzoaj7u21y1b/px4fmu-v2_offboard_yaw_control.px4?dl=0). Download this file, open QGroundControl and go to the Firmware update section. Select advanced options and then browse for the downloaded binary file.
+
+#### Pixhawk parameters
 The file containing PX4 parameters used on F550 frame (hexrotor) is given [here](https://github.com/westpoint-robotics/Firmware/blob/mpc_offboard_control/parameters/f550_mpc_offboard_control.params). If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
 
-TODO: add a link to prebuilt firmware binary file.
+Make sure to map your rc channels correctly. For offboard control mode, select rc channel (this can be also done through QGroundControl GUI) and threshold by setting the following parameters:
+```
+RC_MAP_OFFB_SW 9 
+RC_OFFB_TH 0.5
+```
 
 ### ROS setup
 
