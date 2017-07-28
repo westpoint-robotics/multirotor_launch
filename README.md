@@ -57,7 +57,7 @@ If your are using Optitrack stream as UAV pose feedback source, in this setup we
 ```
 $ sudo apt-get install ros-kinetic-vrpn ros-kinetic-vrpn-client-ros
 ```
-The pose of the vehicle is given in topic /vrpn_client_node/<tracker_name>/pose, where <tracker_name> is the name of the tracker assigned in Motive software. Make sure that you select vrpn engine streaming in Motive software and Z-up coordinate frame in broadcast options. Also, get the IP address of the PC running Motive and add the host named *mocap_station* in the */etc/hosts* file of your Linux PC running ROS vrpn_client_node. The added line should look like:
+The pose of the vehicle is given in topic /vrpn_client_node/<tracker_name>/pose, where <tracker_name> is the name of the tracker assigned in Motive software. Make sure that you select vrpn engine streaming in Motive software and Z-up coordinate frame in broadcast options. Also, make sure that your Linux PC is connected to the same network as Motive PC. Finally, get the IP address of the PC running Motive and add the host named *mocap_station* in the */etc/hosts* file of your Linux PC running ROS vrpn_client_node. The added line should look like:
 ```
 <ip_address> mocap_station
 ```
