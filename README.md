@@ -114,6 +114,10 @@ To run all packages required for flying in optitrack use the following launch fi
 ```  
   $ roslaunch multirotor_launch px4_msf_mpc_mavros_optitrack.launch 
 ```
+There are two important parameters that you need to adjust. *px4_dev* contains the path to the serial device used for communicating with Pixhawk and the corresponding baud rate. If you use Pixhawk telemetry port for serial communication, the parameter is usually set to */dev/ttyUSB0:57600* if using 57600 as baud rate or */dev/ttyUSB0:921600* if using higher baud rate. If you are using Pixhawk usb port for serial communication, set this parameter to */dev/ttyACM0:57600*.
+
+The parameter *thrust_max* is used for scaling the thrust reference from mpc controller, which is in Newtons, to range [0,1] expected by Pixhawk. It represents the maximum thrust reference that the mpc controller generates and it depends on the UAV mass. However, this parameter should be fine tuned during the switch to offboard mode control in order to ensure smoothless transition. If your vehicle suddenly goes up when you switch to offboard mode control, increase *thrust_max* and vice versa. E.g. for the f550 vehicle, whose mass is 2.3 kg, we set this parameter to 34. If you know the mass of the vehicle you are using, scale this parameter with the ratio of your vehicle mass and the f550 UAV mass (2.3 kg) and then fine tune the parameter, as described earlier.  
+
 There is only one thing left before flying, initialize a multi-sensor fusion (msf) filter by using rqt_reconfigure
 ```
 rosrun rqt_reconfigure rqt_reconfigure
