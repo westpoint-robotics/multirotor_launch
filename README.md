@@ -71,6 +71,9 @@ The installation instructions are given in the above link.
 Finally, a set of launch files for running everything is given in package:
 
   * [multirotor_launch](https://github.com/westpoint-robotics/multirotor_launch) (branch master)
+  
+#### Packages for simulation
+If you want to run software-in-the-loop (SITL) simulation described [here](#running-a-sitl-simulation), you will need to install additional ROS packages. The main package is rotor_simulator, however to run it in under ROS Kinetic, you will have to checkout previous versions of some packages, namely glog_catkin, mav_comm and rotors_simulator. The complete installation instructions are given in [rotors_simulator](https://github.com/westpoint-robotics/rotors_simulator). 
 
 #### Dependecies
 To use a PointGrey camera, simply install their official driver:
