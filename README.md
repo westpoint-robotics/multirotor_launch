@@ -90,6 +90,35 @@ If running a ROS barebone version, install image transport pluggins:
 sudo apt-get install ros-kinetic-image-transport-plugins
 ```
 
+## RC controller setup
+In this setup, the vehicle is controlled through RC controller. As with the current version of sotware, you need a RC controller with at least 7 channels: 4 analog (altitude, heading, roll (y position) and pitch (x position) control) and 3 switches. The following switches are used:
+  * offboard mode switch (pwm 1000 (0) - Pixhawk control, pwm 1900 (1) - offboard computer control)
+  * rc detect switch (pwm 1000 (0) - rc controller off, pwm 1900 (1) - rc controller on)
+  * controller mode switch (pwm 1000 (0) - manual control mode, pwm 1500-1900 (1) - position control mode)
+
+The offboard mode switch is used to put Pixhawk in offboard mode control where it listens mavlink messages to control thrust, yaw rate, roll and pitch angles. To be able to turn on the offboard mode control, you should publish references for thrust and attitude through mavlink messages. If the Pixhawk does not receive those messages, it will reject the transition to offboard mode control. In our setup, MPC controller publishes thrust and attitude references, which we receive and convert to ROS messages expected by mavros, which in turn publishes corresponding mavlink messages.
+
+Rc detect switch is used by MPC controller to detect if RC controller is turned on. If you turn off this switch (pwm value 1000 (0)), the MPC controller will not run nor publish anything. As a consequence, there will be no thrust nor attitude messages published through mavlink, and the Pixhawk would reject the transition to offboard mode control. It is safe and recommended to turn on this switch (pwm value 1900) as soon as you turn on your RC controller.
+
+Controller mode switch determines the mode of the MPC controller. There are two basic modes: manual control (the position of the sticks determine the references for thrust, yaw rate, roll and pitch), and position control mode (the sticks determine the references for x,y,z position and yaw angle). It is recommended that during the transition to offboard mode control, the controller is put in manual control mode. After the Pixhawk is switched to offboard mode control, use this switch to enter the position control mode.
+
+In addition, we use another channel for a safety (kill) switch, which you can assign through QGroundControl GUI. However, this channel is only used by Pixhawk and not by MPC controller.
+
+The mapping of the RC channels used by MPC controller can be modified through [this source file](https://github.com/westpoint-robotics/multirotor_transformations/blob/master/include/RcToJoy.h). Just change the number of the rc channel that you wish to use for each function and compile the code. As stated in this [issue](https://github.com/westpoint-robotics/multirotor_transformations/issues/1), this mapping should be done through a parameter file, which will not require a code compilation after a change is made (TODO).
+
+
+### F550 RC controller
+To control f550 vehicle, we have been using a Spektrum DX9 controller ...
+
+## MPC controller modes
+As stated earlier, the MPC position controller has 2 basic modes:  manual control where the position of the sticks determine the references for thrust, yaw rate, roll and pitch, and position control mode, where the sticks determine the references for x,y,z position and yaw angle.
+
+Furthermore, the position control mode has 3 submodes. After entering the position control mode, the controller is in so called *carrot* mode. In this mode, by moving the sticks you control the position and heading of the vehicle relative to its measured position and heading (basically, the velocity of the vehicle is controlled). 
+
+The second mode is waypoint following. To enter this mode, you have to call ros service *back_to_position_hold*. Once the service is called, the vehicle holds its current position and waits for a new waypoint. The new waypoint is commanded by publishing a ROS message to *command/pose* topic. To switch back to *carrot* mode, just move any stick used for thrust, heading, roll and pitch control.
+
+The third mode is trajectory following mode. The instructions for this mode will be added once this mode is properly tested. Note that this mode also requires a trajectory planning node, which has not been yet tested (TODO).
+
 ## Running a SITL simulation
 
 ### Brief description
