@@ -108,7 +108,9 @@ The mapping of the RC channels used by MPC controller can be modified through [t
 
 
 ### F550 RC controller
-To control f550 vehicle, we have been using a Spektrum DX9 controller ...
+To control f550 vehicle, we have been using a Spektrum DX9 controller. Initial position of all switches should be away from the operator (pwm value 1000). To turn on a specific function, pull the corresponding switch in the position closer to the operator (pwm 1900). The following figure describes the function of the used switches.
+
+![f550_spektrum_dx9](https://user-images.githubusercontent.com/2662767/28971568-b4b0e940-792c-11e7-95cf-ade582b58557.png)
 
 ## MPC controller modes
 As stated earlier, the MPC position controller has 2 basic modes:  manual control where the position of the sticks determine the references for thrust, yaw rate, roll and pitch, and position control mode, where the sticks determine the references for x,y,z position and yaw angle.
