@@ -13,12 +13,12 @@ It is important to flash a proper PX4 stack on Pixhawk flight control unit (fcu)
 
 Once you cloned the valid git repository, checkout the branch mpc_offboard_control, build and upload the firmware. To set up your environment for cross-compile, follow these [instructions](https://dev.px4.io/en/setup/dev_env_linux.html).
 
-Now built and upload the firmare with the following command:
+Now built and upload the firmware with the following command:
 ```
 make nuttx_px4fmu-v2_default upload
 ```
 #### Uploading prebuilt firmware binary
-An alternative to compiling source code is to download the prebuilt firmware version available [here](https://www.dropbox.com/s/9whpzoaj7u21y1b/px4fmu-v2_offboard_yaw_control.px4?dl=0). Download this file, open QGroundControl and go to the Firmware update section. Select advanced options and then browse for the downloaded binary file.
+An alternative to compiling the source code is to download a prebuilt firmware version available [here](https://www.dropbox.com/s/9whpzoaj7u21y1b/px4fmu-v2_offboard_yaw_control.px4?dl=0). Download this file, open QGroundControl and go to the Firmware update section. Select advanced options and then browse for the downloaded binary file.
 
 #### Pixhawk parameters
 The file containing PX4 parameters used on F550 frame (hexrotor) is given [here](https://github.com/westpoint-robotics/Firmware/blob/mpc_offboard_control/parameters/f550_mpc_offboard_control.params). If you are using the same frame, the recommendation is to upload these parameters to your Pixhawk (using QGroundControl) and then perform sensor calibration (definitely) and radio calibration (optional, if using different rc controller).
@@ -46,12 +46,12 @@ To connect above ROS packages with Pixhawk, the following packages are required:
   * [mavros](https://github.com/westpoint-robotics/mavros) (branch offboard_yaw_control)
   * [multirotor_transformations](https://github.com/westpoint-robotics/multirotor_transformations) (branch master)
 
-For mavros dependencies, follow instructions on [mavros](https://github.com/westpoint-robotics/mavros) git page, but make sure you switch to *offboard_yaw_control* branch (there are no such instructions on master branch). We modified mavros to allow for offboard yaw control. This means that instead of yaw reference, we send yaw rate reference to Pixhawk. The link to PX4 stack supporting this modification is given in [Pixhawk section](#pixhawk-setup). To be able to communicate with Pixhawk board, add your user to *dialout* group (restart is required for changes to make effect):
+For mavros dependencies, follow instructions on [mavros](https://github.com/westpoint-robotics/mavros) git page, but make sure you switch to *offboard_yaw_control* branch (there are no such instructions on master branch). We modified mavros to allow for offboard yaw control. This means that instead of yaw reference, we send yaw rate reference to Pixhawk. The link to PX4 stack supporting this modification is given in [Pixhawk section](#pixhawk-setup). To be able to communicate with the Pixhawk board, add your user to *dialout* group (restart is required for changes to make effect):
 ```
 sudo usermod -a -G dialout <user>
 ```
 
-In short, multirotor transformation package contains various ROS nodes which provide interfaces between controller node and mavros, and estimation node and optitrack node, etc.
+In short, multirotor transformation package contains various ROS nodes which provide interfaces between controller node and mavros, estimation node and optitrack node, etc.
 
 If your are using Optitrack stream as UAV pose feedback source, in this setup we use vrpn client package. Install vrpn client with:
 ```
@@ -115,7 +115,7 @@ To control f550 vehicle, we have been using a Spektrum DX9 controller. Initial p
 ## MPC controller modes
 As stated earlier, the MPC position controller has 2 basic modes:  manual control where the position of the sticks determine the references for thrust, yaw rate, roll and pitch, and position control mode, where the sticks determine the references for x,y,z position and yaw angle.
 
-Furthermore, the position control mode has 3 submodes. After entering the position control mode, the controller is in so called *carrot* mode. In this mode, by moving the sticks you control the position and heading of the vehicle relative to its measured position and heading (basically, the velocity of the vehicle is controlled). 
+Furthermore, the position control mode has 3 submodes. After entering the position control mode, the controller is in the *carrot* mode. In this mode, by moving the sticks you control the position and heading of the vehicle relative to its measured position and heading (basically, the velocity of the vehicle is controlled). 
 
 The second mode is waypoint following. To enter this mode, you have to call ros service *back_to_position_hold*. Once the service is called, the vehicle holds its current position and waits for a new waypoint. The new waypoint is commanded by publishing a ROS message to *command/pose* topic. To switch back to *carrot* mode, just move any stick used for thrust, heading, roll and pitch control.
 
