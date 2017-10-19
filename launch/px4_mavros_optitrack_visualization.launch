@@ -1,0 +1,30 @@
+<launch>
+
+  <arg name="namespace" default="mavros" />
+  <arg name="marker_name" default="pixhawk" />
+  <arg name="px4_dev" value="/dev/ttyACM0:57600"/>
+
+  <include file="$(find mavros)/launch/px4.launch">
+      <arg name="fcu_url" value="$(arg px4_dev)"/>
+  </include>
+
+  <include file="$(find multirotor_launch)/launch/optitrack.launch"/>
+
+  
+  <node name="optitrack_pose_to_transform_stamped" pkg="multirotor_transformations" type="optitrack_pose_to_transform_stamped_node" output="screen" ns="$(arg namespace)" >
+      <param name="marker_name" value="$(arg marker_name)"/>
+      <remap from="optitrack_pose" to="/vrpn_client_node/$(arg marker_name)/pose" />
+      <remap from="transform_stamped" to="optitrack/pose" />
+      <remap from="pose_nwu" to="mocap/pose" />
+  </node>
+
+  <node pkg="mavros_extras" type="copter_visualization" name="copter_visualization" ns="$(arg namespace)" output="screen">
+      <remap from="local_position" to="local_position/pose"/>
+      <remap from="local_setpoint" to="setpoint_position/local"/>
+      <param name="fixed_frame_id" value="world"/>
+      <param name="child_frame_id" value="$(arg marker_name)_nwu"/>
+  </node>
+
+  <node pkg="tf" type="static_transform_publisher" name="static_transform_pub" args="0 0 0 0 0 0 1 world fcu 10" output="screen" /> 
+
+</launch>
