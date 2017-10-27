@@ -2,14 +2,13 @@
 
   <arg name="namespace" default="mavros" />
   <arg name="marker_name" default="pixhawk" />
-  <arg name="px4_dev" value="/dev/ttyACM0:57600"/>
+  <arg name="px4_dev" value="/dev/ttyACM0:921600"/>
 
   <include file="$(find mavros)/launch/px4.launch">
       <arg name="fcu_url" value="$(arg px4_dev)"/>
   </include>
 
   <include file="$(find multirotor_launch)/launch/optitrack.launch"/>
-
   
   <node name="optitrack_pose_to_transform_stamped" pkg="multirotor_transformations" type="optitrack_pose_to_transform_stamped_node" output="screen" ns="$(arg namespace)" >
       <param name="marker_name" value="$(arg marker_name)"/>
@@ -26,5 +25,8 @@
   </node>
 
   <node pkg="tf" type="static_transform_publisher" name="static_transform_pub" args="0 0 0 0 0 0 1 world fcu 10" output="screen" /> 
+
+	<!-- Start rviz visualization config -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find multirotor_launch)/rviz/pixhawk.rviz" />
 
 </launch>
