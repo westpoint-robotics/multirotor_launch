@@ -7,7 +7,6 @@ The instructions given here are valid for a multirotor UAV running custom PX4 st
 There are a few modifications with the below setup.  
 1. The firmware is the LPE position estimator as described here: https://dev.px4.io/en/ros/external_position_estimation.html
 2. This thread is useful: https://github.com/mavlink/mavros/issues/767
-3. 
 
 ## Installation & Dependencies
 
