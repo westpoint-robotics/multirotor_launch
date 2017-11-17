@@ -3,6 +3,12 @@ ROS launch files used in multirotor UAV control.
 
 The instructions given here are valid for a multirotor UAV running custom PX4 stack on a Pixhawk board and running ROS packages on a PC (either onboard, like Gigabyte Brix or Intel Nuc, or ground PC station).
 
+## LPE Position Estimator
+There are a few modifications with the below setup.  
+1. The firmware is the LPE position estimator as described here: https://dev.px4.io/en/ros/external_position_estimation.html
+2. This thread is useful: https://github.com/mavlink/mavros/issues/767
+3. 
+
 ## Installation & Dependencies
 
 ### Pixhawk setup
