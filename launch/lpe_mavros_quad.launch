@@ -1,0 +1,24 @@
+<? xml version="1.0" /?>
+<launch>
+
+  <arg name="marker_name" default="pixhawk" />
+  <arg name="px4_dev" value="/dev/ttyACM0:921600"/>
+
+  <group ns="$(arg namespace)">
+    <include file="$(find mavros)/launch/px4.launch">
+        <arg name="fcu_url" value="$(arg px4_dev)"/>
+    </include>
+
+    <node pkg="mavros_extras" type="copter_visualization" name="copter_visualization" ns="$(arg namespace)" output="screen">
+        <remap from="local_position" to="local_position/pose"/>
+        <remap from="local_setpoint" to="setpoint_position/local"/>
+        <param name="fixed_frame_id" value="world"/>
+        <param name="child_frame_id" value="$(arg marker_name)"/>
+    </node>
+
+    <node pkg="topic_tools" type="relay" name="mocap_relay" args="/vrpn_client_node/$(arg marker_name)/pose mocap/pose">
+    </node>
+
+  </group>
+
+</launch>
