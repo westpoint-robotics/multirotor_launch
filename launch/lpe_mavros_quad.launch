@@ -13,8 +13,8 @@
     </include>
 
     <node pkg="mavros_extras" type="copter_visualization" name="copter_visualization" output="screen">
-        <remap from="local_position" to="local_position/pose"/>
-        <remap from="local_setpoint" to="setpoint_position/local"/>
+        <remap from="local_position" to="mavros/local_position/pose"/>
+        <remap from="local_setpoint" to="mavros/setpoint_position/local"/>
         <param name="fixed_frame_id" value="world"/>
         <param name="child_frame_id" value="$(arg marker_name)"/>
     </node>
