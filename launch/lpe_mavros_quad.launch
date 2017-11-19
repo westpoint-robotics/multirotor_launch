@@ -1,33 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <arg name="marker_name" default="pixhawk" />
-  <arg name="px4_dev" value="/dev/ttyACM0:921600"/>
+  <arg name="MARKER_NAME" default="pixhawk" />
+  <arg name="PX4_DEV" default="/dev/ttyACM0:921600"/>
 
-  <arg name="base_station_name" value="base_station"/>
-  <arg name="base_station_address" value="localhost"/>
-  <machine name="$(arg base_station_name)" address="$(arg base_station_address)"/>
+  <arg name="BASE_STATION_NAME" default="base_station"/>
+  <arg name="BASE_STATION_ADDRESS" default="localhost"/>
+  <machine name="$(arg BASE_STATION_NAME)" address="$(arg BASE_STATION_ADDRESS)"/>
 
-  <group ns="$(arg marker_name)">
-    <include file="$(find mavros)/launch/px4.launch">
-        <arg name="fcu_url" value="$(arg px4_dev)"/>
-    </include>
+  <arg name="VIZ_THROTTLE_SPEED" default="16384"/>
+  <arg name="VIZ_THROTTLE_SPEED_HALF" value="$(eval arg('VIZ_THROTTLE_SPEED')/2.0)"/>
+  <arg name="MOCAP_THROTTLE_SPEED" default="16384"/>
 
-    <node pkg="mavros_extras" type="copter_visualization" name="copter_visualization" output="screen">
-        <remap from="local_position" to="mavros/local_position/pose"/>
-        <remap from="local_setpoint" to="mavros/setpoint_position/local"/>
-        <param name="fixed_frame_id" value="world"/>
-        <param name="child_frame_id" value="$(arg marker_name)"/>
+  <group ns="$(arg MARKER_NAME)">
+    <!-- Throttle and relay at the same time
+      from  /vrpn_client_node/$(arg MARKER_NAME)/pose
+      to $(MARKER_NAME)/mavros/mocap/pose
+      throttle to  MOCAP_THROTTLE_SPEED bytes/sec
+      run on BASE_STATION_NAME
+    -->
+    <node pkg="topic_tools" type="throttle" name="mocap_throttle"
+    args="bytes /vrpn_client_node/$(arg MARKER_NAME)/pose $(arg MOCAP_THROTTLE_SPEED) 1.0 mavros/mocap/pose"
+    machine="$(arg BASE_STATION_NAME)">
     </node>
 
-    <!-- Throttle and relay at the same time
-      from  /vrpn_client_node/$(arg marker_name)/pose
-      to $(marker_name)/mavros/mocap/pose
-      throttle to  16384 bytes/sec
-      run on $(arg base_station_name)
+    <!-- Startup the mavros px4 node -->
+    <include file="$(find mavros)/launch/px4.launch">
+        <arg name="fcu_url" value="$(arg PX4_DEV)"/>
+    </include>
+
+    <!-- Send throttled visualization information back
+      from mavros/local_positon/pose & mavros/setpoint_position/local 
+      to viz_throttle/*
+      throttle to  VIZ_THROTTLE_SPEED/2.0 bytes/sec
+      run locally
     -->
-    <node pkg="topic_tools" type="throttle" name="mocap_relay" args="bytes /vrpn_client_node/$(arg marker_name)/pose
-    16384 1.0 mavros/mocap/pose"
-    machine="$(arg base_station_name)">
+    <node pkg="topic_tools" type="throttle" name="viz_pose_throttle"
+    args="bytes mavros/local_position/pose $(arg VIZ_THROTTLE_SPEED_HALF) 1.0 viz_throttle/local_position/pose">
+    </node>
+    <node pkg="topic_tools" type="throttle" name="viz_setpoint_throttle"
+    args="bytes mavros/setpoint_position/local $(arg VIZ_THROTTLE_SPEED_HALF) 1.0 viz_throttle/setpoint_position/local">
+    </node>
+
+    <!-- run the visualization on the base station -->
+    <node pkg="mavros_extras" type="copter_visualization" name="copter_visualization"
+     output="log" machine="$(arg BASE_STATION_NAME)">
+
+        <remap from="local_position" to="viz_throttle/local_position/pose"/>
+        <remap from="local_setpoint" to="viz_throttle/setpoint_position/local"/>
+        <param name="fixed_frame_id" value="world"/>
+        <param name="child_frame_id" value="$(arg MARKER_NAME)"/>
+
     </node>
 
   </group>
