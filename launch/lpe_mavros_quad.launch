@@ -3,6 +3,12 @@
 
   <arg name="MARKER_NAME" default="pixhawk" />
   <arg name="PX4_DEV" default="/dev/ttyACM0:921600"/>
+  <arg name="gcs_url" default="" />
+  <arg name="tgt_system" default="1" />
+  <arg name="tgt_component" default="1" />
+  <arg name="log_output" default="screen" />
+  <arg name="pluginlists_yaml" default="$(find mavros)/launch/px4_pluginlists.yaml" />
+  <arg name="config_yaml" default="$(find mavros)/launch/px4_config.yaml" />
 
   <arg name="BASE_STATION_NAME" default="base_station"/>
   <arg name="BASE_STATION_ADDRESS" default="localhost"/>
@@ -11,6 +17,10 @@
   <arg name="VIZ_THROTTLE_SPEED" default="16384"/>
   <arg name="VIZ_THROTTLE_SPEED_HALF" value="$(eval arg('VIZ_THROTTLE_SPEED')/2.0)"/>
   <arg name="MOCAP_THROTTLE_SPEED" default="16384"/>
+
+  <arg name="COMPANION_COMPUTER_NAME" default="$(arg MARKER_NAME)"/>
+  <arg name="COMPANION_COMPUTER_ADDRESS" default="localhost"/>
+  <machine name="$(arg COMPANION_COMPUTER_NAME)" address="$(arg COMPANION_COMPUTER_ADDRESS)"/>
 
   <group ns="$(arg MARKER_NAME)">
     <!-- Throttle and relay at the same time
@@ -24,22 +34,30 @@
     machine="$(arg BASE_STATION_NAME)">
     </node>
 
-    <!-- Startup the mavros px4 node -->
-    <include file="$(find mavros)/launch/px4.launch">
-        <arg name="fcu_url" value="$(arg PX4_DEV)"/>
-    </include>
+	<node pkg="mavros" type="mavros_node" name="mavros" required="true" clear_params="true" output="$(arg log_output)" machine="$(arg COMPANION_COMPUTER_NAME)">
+		<param name="fcu_url" value="$(arg PX4_DEV)" />
+		<param name="gcs_url" value="$(arg gcs_url)" />
+		<param name="target_system_id" value="$(arg tgt_system)" />
+		<param name="target_component_id" value="$(arg tgt_component)" />
+
+		<!-- load blacklist, config -->
+		<rosparam command="load" file="$(arg pluginlists_yaml)" />
+		<rosparam command="load" file="$(arg config_yaml)" />
+	</node>
 
     <!-- Send throttled visualization information back
       from mavros/local_positon/pose & mavros/setpoint_position/local 
       to viz_throttle/*
       throttle to  VIZ_THROTTLE_SPEED/2.0 bytes/sec
-      run locally
+      run on COMPANION_COMPUTER_NAME
     -->
     <node pkg="topic_tools" type="throttle" name="viz_pose_throttle"
-    args="bytes mavros/local_position/pose $(arg VIZ_THROTTLE_SPEED_HALF) 1.0 viz_throttle/local_position/pose">
+    args="bytes mavros/local_position/pose $(arg VIZ_THROTTLE_SPEED_HALF) 1.0 viz_throttle/local_position/pose" machine="$(arg COMPANION_COMPUTER_NAME)">
+      <param name="lazy" value="true"/>
     </node>
     <node pkg="topic_tools" type="throttle" name="viz_setpoint_throttle"
-    args="bytes mavros/setpoint_position/local $(arg VIZ_THROTTLE_SPEED_HALF) 1.0 viz_throttle/setpoint_position/local">
+    args="bytes mavros/setpoint_position/local $(arg VIZ_THROTTLE_SPEED_HALF) 1.0 viz_throttle/setpoint_position/local" machine="$(arg COMPANION_COMPUTER_NAME)">
+      <param name="lazy" value="true"/>
     </node>
 
     <!-- run the visualization on the base station -->
