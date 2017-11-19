@@ -3,6 +3,7 @@
 
   <arg name="marker_name" default="pixhawk" />
   <arg name="px4_dev" value="/dev/ttyACM0:921600"/>
+  <arg name="base_station_name" value="localhost"/>
 
   <group ns="$(arg namespace)">
     <include file="$(find mavros)/launch/px4.launch">
@@ -16,7 +17,15 @@
         <param name="child_frame_id" value="$(arg marker_name)"/>
     </node>
 
-    <node pkg="topic_tools" type="relay" name="mocap_relay" args="/vrpn_client_node/$(arg marker_name)/pose mocap/pose">
+    <!-- Throttle and relay at the same time
+      from  /vrpn_client_node/$(arg marker_name)/pose
+      to mocap/pose
+      throttle to  65536 bytes/sec
+      run on $(arg base_station_name)
+    -->
+    <node pkg="topic_tools" type="throttle" name="mocap_relay" args="bytes /vrpn_client_node/$(arg marker_name)/pose
+    65536 mocap/pose"
+    machine="$(arg base_station_name)">
     </node>
 
   </group>
