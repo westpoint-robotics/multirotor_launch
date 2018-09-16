@@ -168,3 +168,39 @@ To run all packages required for flying with multi-marker tracking algorihm, use
   $ roslaunch multirotor_launch px4_msf_mpc_mavros_multimarker.launch
 ```
 Again, before flying initialize the multi-sensor fusion filter.
+
+## Setup for UAV with manipulator
+This section describes changes added with 5dof manipulator composed of Dynamixel XM430-W350-T motors. Read carefully if you are using the UAV with this particular manipulator. There are several required packages for this setup to run correctly, you can clone those in your workspace with:
+```
+sudo apt-get install ros-kinetic-dynamixel-sdk
+cd ~/ctools_ws/src
+git clone https://github.com/larics/aerial_manipulators.git (branch master)
+git clone https://github.com/larics/dynamixel-workbench.git (branch kinetic-devel)
+git clone git@github.com:larics/dynamixel-workbench-msgs.git (branch kinetic-devel)
+
+catkin build
+```
+
+Before flight check the mass field in MPC configuration file `~/ctools_ws/src/mav_linear_mpc/resources/linear_mpc_px4_f550.yaml`. The mass without manipulator is `m=2.3kg`, when you attach the manipulator the mass equals `m=2.925kg`. **However**, in our experience the UAV with such settings becomes very aggressive, we recommend using `m=2.5kg` for UAV with manipulator.
+
+To launch the UAV with the manipulator you can use:
+```
+  $ roslaunch multirotor_launch px4_manipulator_msf_mpc_mavros_optitrack_multimaster.launch 
+```
+
+### Note about adding symlinks for tty
+This is usually called a persistent rule for serial devices. The idea is following. When you plug in a serial device you can usually access it at `/dev/ttyUSB0, /dev/ttyUSB1` etc. This can create symbolic link to `\dev\<your_name>` so every time you plug in the device the link is automatically created and you can access it by accessing the link. To create symlinks do following:
+
+First get info about serial, idVendor and idProduct by typing:
+```
+udevadm info -a -n /dev/ttyUSB0 | grep '{serial}' | head -n1
+udevadm info -a -n /dev/ttyUSB0 | grep '{idVendor}' | head -n1
+udevadm info -a -n /dev/ttyUSB0 | grep '{idProduct}' | head -n1
+```
+
+Create a new udev rule file in `/etc/udev/rules.d/` with the name `99-usb-serial.rules`
+
+Enter the following line to the file:
+`SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{serial}=="A4001u3G", SYMLINK+="<your_name>"`
+
+You can do this for multiple devices. Note: The `/dev/ttyUSB??` will still be random, but it will always create a link to `/dev/<your_name>`. The field `<your_name>` can be anything, but it is a good practice to name it `ttyUSB_<someting>`.
